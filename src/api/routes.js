@@ -64,25 +64,43 @@ router.get('/templates/:name', async (req, res) => {
  * POST /api/generate
  * Generate a PDF from a named template with data.
  *
- * Request body:
+ * Accepts two request formats:
+ *
+ * Format 1 (structured):
  * {
- *   "template": "insurance-coverage",
- *   "data": { ... },
- *   "options": {
- *     "format": "A4",
- *     "landscape": false,
- *     "margin": { "top": "0", "right": "0", "bottom": "0", "left": "0" }
- *   }
+ *   "template": "breach-control",
+ *   "data": { "headerTitle": "...", ... },
+ *   "options": { "format": "A4" }
  * }
  *
- * Response: PDF binary (application/pdf) or base64 JSON
+ * Format 2 (flat - template name via query param):
+ * POST /api/generate?template=breach-control
+ * { "headerTitle": "...", ... }
+ *
+ * Response: PDF binary (application/pdf) or base64 JSON (with "output":"base64")
  */
 router.post('/generate', async (req, res) => {
   try {
-    const { template, data, options = {}, output } = req.body;
+    // Support template name from query string or body
+    let template = req.body.template || req.query.template;
+    let data = req.body.data;
+    let options = req.body.options || {};
+    let output = req.body.output || req.query.output;
+
+    // If no nested "data" field, treat the entire body as data (flat format)
+    if (template && !data) {
+      const { template: _t, options: _o, output: _out, ...rest } = req.body;
+      data = Object.keys(rest).length > 0 ? rest : {};
+    }
 
     if (!template) {
-      return res.status(400).json({ error: 'Missing required field: template' });
+      return res.status(400).json({
+        error: 'Missing template name. Either include "template" in the JSON body or pass it as a query parameter: POST /api/generate?template=breach-control',
+        example: {
+          structured: { template: 'breach-control', data: { headerTitle: '...' } },
+          flat: 'POST /api/generate?template=breach-control with { headerTitle: "..." }',
+        },
+      });
     }
 
     const html = await processTemplate(template, data || {});

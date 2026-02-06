@@ -248,6 +248,7 @@
 
     <span class="spacer"></span>
 
+    <button onclick="togglePageGuides()" id="guidesBtn" title="Toggle page boundary guides">Page Guides: ON</button>
     <button onclick="previewPdf()" class="btn-warning">Preview PDF</button>
     <button onclick="exportTemplate()" class="btn-success">Export Template</button>
     <button onclick="saveTemplate()">Save</button>
@@ -308,16 +309,17 @@
 
         <label style="margin-top: 16px;">Page Settings</label>
         <div style="display: flex; gap: 8px; margin-top: 4px;">
-          <select id="pageFormat" style="flex:1; font-size: 12px; padding: 4px 8px; background: #0d1117; color: #c9d1d9; border: 1px solid #333; border-radius: 4px;">
-            <option value="A4">A4</option>
-            <option value="Letter">Letter</option>
-            <option value="Legal">Legal</option>
-            <option value="A3">A3</option>
+          <select id="pageFormat" onchange="applyPageGuides()" style="flex:1; font-size: 12px; padding: 4px 8px; background: #0d1117; color: #c9d1d9; border: 1px solid #333; border-radius: 4px;">
+            <option value="A4">A4 (210 x 297mm)</option>
+            <option value="Letter">Letter (8.5 x 11in)</option>
+            <option value="Legal">Legal (8.5 x 14in)</option>
+            <option value="A3">A3 (297 x 420mm)</option>
           </select>
           <label style="display: flex; align-items: center; gap: 4px; margin: 0; text-transform: none; font-size: 12px; color: #c9d1d9;">
-            <input type="checkbox" id="pageLandscape"> Landscape
+            <input type="checkbox" id="pageLandscape" onchange="applyPageGuides()"> Landscape
           </label>
         </div>
+        <div id="pageDimDisplay" style="font-size: 10px; color: #666; margin-top: 4px;"></div>
       </div>
     </div>
   </div>
@@ -352,6 +354,150 @@
     let editor;
     let currentTemplateName = null;  // Track loaded template for server-side preview
     let currentTemplateSource = null; // Raw .hbs source before GrapesJS parsing
+    let pageGuidesEnabled = true;
+
+    // Page sizes in CSS pixels at 96 DPI (matching Chrome's PDF rendering)
+    const PAGE_SIZES = {
+      A4:      { w: 794, h: 1123, label: 'A4 (210 x 297mm)' },
+      Letter:  { w: 816, h: 1056, label: 'Letter (8.5 x 11in)' },
+      Legal:   { w: 816, h: 1344, label: 'Legal (8.5 x 14in)' },
+      A3:      { w: 1123, h: 1587, label: 'A3 (297 x 420mm)' },
+    };
+
+    function getPageDimensions() {
+      const format = document.getElementById('pageFormat').value;
+      const landscape = document.getElementById('pageLandscape').checked;
+      const size = PAGE_SIZES[format] || PAGE_SIZES.A4;
+      return landscape
+        ? { w: size.h, h: size.w, label: size.label }
+        : { w: size.w, h: size.h, label: size.label };
+    }
+
+    // Inject or update page guide styles inside the GrapesJS canvas iframe
+    function applyPageGuides() {
+      const dim = getPageDimensions();
+      const landscape = document.getElementById('pageLandscape').checked;
+
+      // Update dimension display
+      const dimDisplay = document.getElementById('pageDimDisplay');
+      if (dimDisplay) {
+        dimDisplay.textContent = `${dim.w} x ${dim.h}px` + (landscape ? ' (landscape)' : '');
+      }
+
+      try {
+        const iframeDoc = editor.Canvas.getDocument();
+        if (!iframeDoc) return;
+
+        // Remove old guide style if it exists
+        let styleEl = iframeDoc.getElementById('docgen-page-guides');
+        if (!styleEl) {
+          styleEl = iframeDoc.createElement('style');
+          styleEl.id = 'docgen-page-guides';
+          iframeDoc.head.appendChild(styleEl);
+        }
+
+        if (!pageGuidesEnabled) {
+          styleEl.textContent = `
+            body {
+              max-width: ${dim.w}px;
+              margin: 0 auto !important;
+              background: white;
+            }
+          `;
+          // Remove any existing guide overlays
+          iframeDoc.querySelectorAll('.docgen-page-boundary').forEach(el => el.remove());
+          return;
+        }
+
+        styleEl.textContent = `
+          body {
+            max-width: ${dim.w}px;
+            margin: 0 auto !important;
+            background: white;
+            position: relative;
+            min-height: ${dim.h}px;
+          }
+        `;
+
+        // Remove old overlays
+        iframeDoc.querySelectorAll('.docgen-page-boundary').forEach(el => el.remove());
+
+        // Create page boundary markers using positioned elements
+        // We observe body height to know how many pages there are
+        const bodyHeight = Math.max(iframeDoc.body.scrollHeight, dim.h);
+        const numPages = Math.ceil(bodyHeight / dim.h);
+
+        for (let i = 1; i <= numPages; i++) {
+          const yPos = i * dim.h;
+
+          // Red dashed line at page break
+          const line = iframeDoc.createElement('div');
+          line.className = 'docgen-page-boundary';
+          line.style.cssText = `
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: ${yPos}px;
+            height: 0;
+            border-top: 2px dashed #e74c3c;
+            z-index: 99999;
+            pointer-events: none;
+          `;
+
+          // Page label
+          const label = iframeDoc.createElement('div');
+          label.className = 'docgen-page-boundary';
+          label.style.cssText = `
+            position: absolute;
+            right: 4px;
+            top: ${yPos - 20}px;
+            font-size: 10px;
+            color: #e74c3c;
+            font-family: sans-serif;
+            background: rgba(255,255,255,0.85);
+            padding: 1px 6px;
+            border-radius: 3px;
+            z-index: 99999;
+            pointer-events: none;
+          `;
+          label.textContent = `End of page ${i}`;
+
+          // "Page N" label at top of each page
+          if (i <= numPages) {
+            const pageLabel = iframeDoc.createElement('div');
+            pageLabel.className = 'docgen-page-boundary';
+            const pageTop = (i - 1) * dim.h;
+            pageLabel.style.cssText = `
+              position: absolute;
+              left: 4px;
+              top: ${pageTop + 4}px;
+              font-size: 10px;
+              color: #999;
+              font-family: sans-serif;
+              background: rgba(255,255,255,0.85);
+              padding: 1px 6px;
+              border-radius: 3px;
+              z-index: 99999;
+              pointer-events: none;
+            `;
+            pageLabel.textContent = `Page ${i} of ~${numPages}`;
+            iframeDoc.body.appendChild(pageLabel);
+          }
+
+          iframeDoc.body.appendChild(line);
+          iframeDoc.body.appendChild(label);
+        }
+      } catch (e) {
+        console.warn('Could not apply page guides:', e);
+      }
+    }
+
+    function togglePageGuides() {
+      pageGuidesEnabled = !pageGuidesEnabled;
+      const btn = document.getElementById('guidesBtn');
+      btn.textContent = `Page Guides: ${pageGuidesEnabled ? 'ON' : 'OFF'}`;
+      applyPageGuides();
+    }
 
     // Initialize GrapesJS
     function initEditor() {
@@ -373,7 +519,6 @@
             'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
           ],
         },
-        // Custom blocks for document generation
         blockManager: {
           appendTo: '.gjs-blocks-cs',
         },
@@ -381,6 +526,18 @@
 
       // Add custom blocks for PDF templates
       addCustomBlocks();
+
+      // Apply page guides once the canvas iframe is ready
+      editor.on('canvas:frame:load', () => {
+        applyPageGuides();
+      });
+
+      // Refresh guides when components change (content may now span more pages)
+      let guideTimer = null;
+      editor.on('component:update component:add component:remove', () => {
+        clearTimeout(guideTimer);
+        guideTimer = setTimeout(applyPageGuides, 300);
+      });
 
       // Set some starter content
       editor.setComponents(`
@@ -499,8 +656,20 @@
 
       bm.add('page-break', {
         label: 'Page Break',
-        category: 'Document',
-        content: `<div style="page-break-after: always; border: 2px dashed #ccc; padding: 10px; text-align: center; color: #999; margin: 10px 0;">--- Page Break ---</div>`,
+        category: 'Page Layout',
+        content: `<div style="page-break-after: always; break-after: page; border: 2px dashed #e74c3c; padding: 8px; text-align: center; color: #e74c3c; margin: 10px 0; font-size: 11px; font-family: sans-serif; background: #fef2f2;">PAGE BREAK - content below starts on next page</div>`,
+      });
+
+      bm.add('avoid-break', {
+        label: 'Keep Together',
+        category: 'Page Layout',
+        content: `<div style="page-break-inside: avoid; break-inside: avoid; border: 1px dashed #3b82f6; padding: 10px; min-height: 40px;"><p style="color: #666;">Content in this box will not be split across pages</p></div>`,
+      });
+
+      bm.add('break-before', {
+        label: 'Start on New Page',
+        category: 'Page Layout',
+        content: `<div style="page-break-before: always; break-before: page; border-top: 2px dashed #e74c3c; padding-top: 8px; margin-top: 10px;"><p style="color: #666;">This section starts on a new page</p></div>`,
       });
 
       bm.add('footer', {
@@ -565,6 +734,9 @@
         editor.setStyle(cssRes);
         document.getElementById('dataJson').value = fixtureRes;
         document.getElementById('statusText').textContent = `Template: ${name}`;
+
+        // Refresh page guides after template loads (content height changed)
+        setTimeout(applyPageGuides, 500);
       } catch (err) {
         alert('Failed to load template: ' + err.message);
       }

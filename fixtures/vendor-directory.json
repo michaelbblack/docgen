@@ -1,7 +1,13 @@
 {
   "headerTitle": "System Control:",
   "headerSubtitle": "Pre-Breach Readiness",
+  "headerIcon": "/assets/images/shield-icon.svg",
   "introText": "<p>Tokio Marine HCC insurance policyholders can access a curated list of service providers that offer a variety of risk mitigation services to help businesses reduce their risk of a cyber breach and benefit with reduced premium rates if certain controls are implemented before your policy binds. Services range from antivirus software to penetration testing to PCI compliance review.</p><p style='margin-top:10px'>This is a comprehensive list of service providers in good standing with <strong>Tokio Marine HCC - Cyber and Professional Lines Group</strong>. Services are to be secured directly with each entity and are not covered as part of your insurance policy.</p>",
+  "partnerLogos": [
+    { "src": "/assets/images/company-logo.svg", "alt": "Kroll" },
+    { "src": "/assets/images/company-logo.svg", "alt": "Ankura" },
+    { "src": "/assets/images/company-logo.svg", "alt": "Datto" }
+  ],
   "ratesNote": "Some rates have been negotiated and are determined per project and vary according to the size and scope of services.",
   "categories": [
     {

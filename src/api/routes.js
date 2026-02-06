@@ -1,6 +1,33 @@
 import { Router } from 'express';
+import multer from 'multer';
+import { readFile, writeFile, mkdir } from 'fs/promises';
+import { resolve, dirname, extname } from 'path';
+import { fileURLToPath } from 'url';
 import { processTemplate, processRawTemplate, listTemplates, getTemplateInfo } from '../engine/template.js';
 import { renderPdf } from '../engine/renderer.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const UPLOADS_DIR = resolve(__dirname, '../../assets/uploads');
+
+// Ensure uploads directory exists
+await mkdir(UPLOADS_DIR, { recursive: true });
+
+// Configure multer for image uploads
+const storage = multer.diskStorage({
+  destination: UPLOADS_DIR,
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e6)}${extname(file.originalname)}`;
+    cb(null, uniqueName);
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (req, file, cb) => {
+    const allowed = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'];
+    cb(null, allowed.includes(extname(file.originalname).toLowerCase()));
+  },
+});
 
 const router = Router();
 
@@ -218,6 +245,70 @@ router.post('/generate/multi', async (req, res) => {
       'Content-Disposition': 'inline; filename="document.pdf"',
     });
     res.send(pdfBuffer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * POST /api/upload
+ * Upload an image and get back a URL or base64 data URI.
+ *
+ * - Send as multipart/form-data with field name "image"
+ * - Returns { url, dataUri, filename }
+ * - Use the url for server-hosted images, or dataUri to embed directly in data
+ */
+router.post('/upload', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No image file provided. Send as multipart/form-data with field name "image"' });
+    }
+
+    const filePath = req.file.path;
+    const fileBuffer = await readFile(filePath);
+    const mimeType = req.file.mimetype;
+    const dataUri = `data:${mimeType};base64,${fileBuffer.toString('base64')}`;
+
+    res.json({
+      filename: req.file.filename,
+      originalName: req.file.originalname,
+      size: req.file.size,
+      url: `/assets/uploads/${req.file.filename}`,
+      dataUri,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * POST /api/upload/base64
+ * Convert a base64-encoded image to a hosted URL, or accept a raw base64
+ * string and return the data URI.
+ *
+ * Body: { "base64": "iVBOR...", "mimeType": "image/png", "filename": "logo.png" }
+ */
+router.post('/upload/base64', async (req, res) => {
+  try {
+    const { base64, mimeType = 'image/png', filename } = req.body;
+
+    if (!base64) {
+      return res.status(400).json({ error: 'Missing required field: base64' });
+    }
+
+    const buffer = Buffer.from(base64, 'base64');
+    const ext = mimeType.split('/')[1] || 'png';
+    const savedName = filename || `${Date.now()}-${Math.round(Math.random() * 1e6)}.${ext}`;
+    const filePath = resolve(UPLOADS_DIR, savedName);
+
+    await writeFile(filePath, buffer);
+
+    res.json({
+      filename: savedName,
+      size: buffer.length,
+      url: `/assets/uploads/${savedName}`,
+      dataUri: `data:${mimeType};base64,${base64}`,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

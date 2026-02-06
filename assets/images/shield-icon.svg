@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50">
+  <!-- Shield background -->
+  <path d="M 25 2 L 10 8 L 10 20 Q 10 35 25 45 Q 40 35 40 20 L 40 8 Z" fill="#2563EB" stroke="#1E40AF" stroke-width="1"/>
+  <!-- Inner shield highlight -->
+  <path d="M 25 5 L 13 10 L 13 20 Q 13 33 25 42 Q 37 33 37 20 L 37 10 Z" fill="#3B82F6"/>
+  <!-- Checkmark inside -->
+  <g transform="translate(25, 25)">
+    <path d="M -5 -1 L -1 4 L 5 -3" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

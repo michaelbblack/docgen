@@ -1,11 +1,13 @@
 {
   "headerTitle": "Breach Control:",
   "headerSubtitle": "Post-Breach Readiness",
+  "headerIcon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MCA1MCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIj4KICA8cGF0aCBkPSJNIDI1IDIgTCAxMCA4IEwgMTAgMjAgUSAxMCAzNSAyNSA0NSBRIDQwIDM1IDQwIDIwIEwgNDAgOCBaIiBmaWxsPSIjMjU2M0VCIiBzdHJva2U9IiMxRTQwQUYiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxwYXRoIGQ9Ik0gMjUgNSBMIDEzIDEwIEwgMTMgMjAgUSAxMyAzMyAyNSA0MiBRIDM3IDMzIDM3IDIwIEwgMzcgMTAgWiIgZmlsbD0iIzNCODJGNiIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1LCAyNSkiPgogICAgPHBhdGggZD0iTSAtNSAtMSBMIC0xIDQgTCA1IC0zIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPC9nPgo8L3N2Zz4K",
   "introText": "When it comes to providing exceptional service for your policyholders and rapid, expert breach response, Tokio Marine HCC's in-house Incident Response Team and experienced cyber claims team gives careful consideration to the needs of each insured. Our goal is to get your insured back up and running and reach a successful resolution. How do we do it?",
   "primaryQuote": {
     "text": "Our Cyber Incident Response Team expedites recovery and minimizes downtime for our policyholders. We're available 24/7 to navigate them through active cyber events.",
     "name": "Richard Savage",
-    "jobTitle": "Sr. Director | Cyber Incident Response"
+    "jobTitle": "Sr. Director | Cyber Incident Response",
+    "photo": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiM0Njc4YjgiLz4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIxNiIgZmlsbD0iI2RkZSIvPgogIDxwYXRoIGQ9Ik0gMjUgOTUgUSAyNSA2NSA1MCA2MCBRIDc1IDY1IDc1IDk1IiBmaWxsPSIjZGRlIi8+Cjwvc3ZnPgo="
   },
   "processSection": {
     "title": "Incident Response and Claims Process",
@@ -48,8 +50,10 @@
   "secondaryQuote": {
     "text": "We deliver superior claims service and assistance. Our Cyber Claims professionals are highly knowledgeable and pride themselves in responsiveness, efficiency, effectiveness, and going above and beyond for our insureds during challenging circumstances.",
     "name": "Tamara Ashjian",
-    "jobTitle": "VP, Claims | Cyber & Tech"
+    "jobTitle": "VP, Claims | Cyber & Tech",
+    "photo": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiM5YjU5YjYiLz4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIxNiIgZmlsbD0iI2VlZSIvPgogIDxwYXRoIGQ9Ik0gMjUgOTUgUSAyNSA2NSA1MCA2MCBRIDc1IDY1IDc1IDk1IiBmaWxsPSIjZWVlIi8+Cjwvc3ZnPgo="
   },
+  "footerLogo": "/assets/images/company-logo.svg",
   "footerContactTitle": "Our cyber claims team can be reached at:",
   "footerContacts": [
     "888.627.8995",

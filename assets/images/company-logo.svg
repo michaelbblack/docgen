@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60">
+  <!-- Outer background -->
+  <rect x="5" y="5" width="110" height="50" fill="#1F2937" stroke="#111827" stroke-width="2" rx="4"/>
+  <!-- Inner accent -->
+  <rect x="10" y="10" width="100" height="40" fill="#374151" rx="3"/>
+  <!-- Accent bar on left -->
+  <rect x="10" y="10" width="4" height="40" fill="#3B82F6" rx="2"/>
+  <!-- Text: TMHCC -->
+  <text x="60" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">TMHCC</text>
+</svg>

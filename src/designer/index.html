@@ -290,6 +290,22 @@
           <p><code>{{{rawHtml}}}</code> - unescaped HTML</p>
         </div>
 
+        <label style="margin-top: 12px;">Images</label>
+        <div class="helper-text">
+          <p>Three ways to add images:</p>
+          <p style="margin-top:4px"><strong style="color:#4fc3f7">1. Server path</strong> (uploaded or static):</p>
+          <p><code>"logo": "/assets/uploads/logo.png"</code></p>
+          <p style="margin-top:4px"><strong style="color:#4fc3f7">2. Data URI</strong> (embedded in JSON):</p>
+          <p><code>"logo": "data:image/png;base64,..."</code></p>
+          <p style="margin-top:4px"><strong style="color:#4fc3f7">3. External URL</strong>:</p>
+          <p><code>"logo": "https://example.com/logo.png"</code></p>
+          <p style="margin-top:6px">In templates, use: <code>&lt;img src="{{logo}}"&gt;</code></p>
+        </div>
+
+        <label style="margin-top: 8px;">Upload Image</label>
+        <input type="file" id="imageUpload" accept="image/*" style="font-size: 11px; margin-top: 4px; color: #c9d1d9;" onchange="uploadImage()">
+        <div id="uploadResult" style="font-size: 11px; margin-top: 4px; color: #27ae60; word-break: break-all;"></div>
+
         <label style="margin-top: 16px;">Page Settings</label>
         <div style="display: flex; gap: 8px; margin-top: 4px;">
           <select id="pageFormat" style="flex:1; font-size: 12px; padding: 4px 8px; background: #0d1117; color: #c9d1d9; border: 1px solid #333; border-radius: 4px;">
@@ -679,6 +695,44 @@
       } else {
         // Add as new text component
         editor.addComponents(`<span>${snippet}</span>`);
+      }
+    }
+
+    // Upload an image and show its paths
+    async function uploadImage() {
+      const fileInput = document.getElementById('imageUpload');
+      const resultDiv = document.getElementById('uploadResult');
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      resultDiv.textContent = 'Uploading...';
+      resultDiv.style.color = '#888';
+
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const res = await fetch(`${API_BASE}/api/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error);
+        }
+
+        const data = await res.json();
+        resultDiv.style.color = '#27ae60';
+        resultDiv.innerHTML = `
+          <div>Uploaded: <strong>${data.originalName}</strong></div>
+          <div style="margin-top:3px">Server path (use in JSON data):</div>
+          <code style="color:#4fc3f7;cursor:pointer" onclick="navigator.clipboard.writeText('${data.url}')" title="Click to copy">${data.url}</code>
+          <div style="margin-top:3px;font-size:10px;color:#888">Click path to copy. Use as: <code>"logo": "${data.url}"</code></div>
+        `;
+      } catch (err) {
+        resultDiv.style.color = '#e74c3c';
+        resultDiv.textContent = 'Upload failed: ' + err.message;
       }
     }
 

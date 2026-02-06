@@ -29,9 +29,10 @@ app.use('/api', apiRoutes);
 // Serve the visual designer
 app.use('/designer', express.static(resolve(__dirname, 'designer')));
 
-// Serve template assets
+// Serve template assets and fixture data
 app.use('/assets', express.static(resolve(__dirname, '../assets')));
 app.use('/templates', express.static(resolve(__dirname, '../templates')));
+app.use('/fixtures', express.static(resolve(__dirname, '../fixtures')));
 
 // Health check
 app.get('/health', (req, res) => {

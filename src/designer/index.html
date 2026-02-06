@@ -529,7 +529,7 @@
           fetch(`${API_BASE}/templates/${name}/meta.json`)
             .then(r => r.json())
             .then(meta => meta.sampleFixture
-              ? fetch(`${API_BASE}/templates/../fixtures/${meta.sampleFixture}`).then(r => r.text()).catch(() => '{}')
+              ? fetch(`${API_BASE}/fixtures/${meta.sampleFixture}`).then(r => r.text()).catch(() => '{}')
               : '{}'
             )
             .catch(() => '{}'),

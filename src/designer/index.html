@@ -250,8 +250,8 @@
 
     <button onclick="togglePageGuides()" id="guidesBtn" title="Toggle page boundary guides">Page Guides: ON</button>
     <button onclick="previewPdf()" class="btn-warning">Preview PDF</button>
-    <button onclick="exportTemplate()" class="btn-success">Export Template</button>
-    <button onclick="saveTemplate()">Save</button>
+    <button onclick="saveTemplate()" class="btn-success">Save to Server</button>
+    <button onclick="downloadBackup()">Download Backup</button>
   </div>
 
   <!-- Main editor area -->
@@ -333,7 +333,7 @@
   <!-- Export modal -->
   <div class="modal-overlay" id="exportModal">
     <div class="modal-content">
-      <h3>Export Template</h3>
+      <h3>Template Source</h3>
       <label>HTML Template (template.hbs)</label>
       <pre id="exportHtml"></pre>
       <label style="margin-top: 12px;">CSS Styles (styles.css)</label>
@@ -341,7 +341,6 @@
       <div class="modal-actions">
         <button onclick="copyExport('html')">Copy HTML</button>
         <button onclick="copyExport('css')">Copy CSS</button>
-        <button onclick="downloadExport()">Download Files</button>
         <button onclick="closeModal('exportModal')">Close</button>
       </div>
     </div>
@@ -742,7 +741,7 @@
       }
     }
 
-    // Preview as PDF
+    // Preview as PDF - always uses current editor content so edits are reflected
     async function previewPdf() {
       try {
         let data = {};
@@ -754,35 +753,14 @@
         const landscape = document.getElementById('pageLandscape').checked;
         const options = { format, landscape };
 
-        let res;
-
-        if (currentTemplateName) {
-          // Use server-side template rendering (preserves Handlebars block syntax
-          // that GrapesJS's DOM parser would otherwise mangle inside tables)
-          res = await fetch(`${API_BASE}/api/generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ template: currentTemplateName, data, options }),
-          });
-        } else if (currentTemplateSource) {
-          // Custom template loaded from file - use raw source instead of
-          // editor.getHtml() to preserve Handlebars syntax
-          const css = editor.getCss();
-          res = await fetch(`${API_BASE}/api/generate/raw`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ html: currentTemplateSource, css, data, options }),
-          });
-        } else {
-          // Fully custom design built in editor
-          const html = editor.getHtml();
-          const css = editor.getCss();
-          res = await fetch(`${API_BASE}/api/generate/raw`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ html, css, data, options }),
-          });
-        }
+        // Always use editor's current HTML/CSS so visual edits are reflected
+        const html = editor.getHtml();
+        const css = editor.getCss();
+        const res = await fetch(`${API_BASE}/api/generate/raw`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ html, css, data, options }),
+        });
 
         if (!res.ok) {
           const err = await res.json();
@@ -797,10 +775,9 @@
       }
     }
 
-    // Export template files
+    // Export template to modal for viewing/copying
     function exportTemplate() {
-      // Prefer raw template source over GrapesJS output (preserves Handlebars syntax in tables)
-      const html = currentTemplateSource || editor.getHtml();
+      const html = editor.getHtml();
       const css = editor.getCss();
       document.getElementById('exportHtml').textContent = html;
       document.getElementById('exportCss').textContent = css;
@@ -820,14 +797,6 @@
       });
     }
 
-    function downloadExport() {
-      const html = editor.getHtml();
-      const css = editor.getCss();
-
-      downloadFile('template.hbs', html);
-      downloadFile('styles.css', css);
-    }
-
     function downloadFile(filename, content) {
       const blob = new Blob([content], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
@@ -838,17 +807,73 @@
       URL.revokeObjectURL(url);
     }
 
-    // Save template to server
+    // Download backup files for offline use
+    function downloadBackup() {
+      const html = editor.getHtml();
+      const css = editor.getCss();
+      const templateName = currentTemplateName || 'custom-template';
+
+      downloadFile(`${templateName}-template.hbs`, html);
+      downloadFile(`${templateName}-styles.css`, css);
+
+      // Also offer the data JSON
+      const dataJson = document.getElementById('dataJson').value;
+      if (dataJson && dataJson !== '{}') {
+        downloadFile(`${templateName}-data.json`, dataJson);
+      }
+    }
+
+    // Save template to server (persists to disk, overwrites existing)
     async function saveTemplate() {
-      const name = prompt('Template name (e.g., my-template):');
+      const defaultName = currentTemplateName || '';
+      const name = prompt('Template name (e.g., my-template):', defaultName);
       if (!name) return;
+
+      if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(name)) {
+        alert('Invalid template name. Use only letters, numbers, hyphens, and underscores. Must start with a letter or number.');
+        return;
+      }
 
       const html = editor.getHtml();
       const css = editor.getCss();
 
-      // For now, show the export - server-side save would need a write endpoint
-      alert(`Template "${name}" exported.\n\nSave these files to templates/${name}/:\n- template.hbs\n- styles.css`);
-      exportTemplate();
+      try {
+        document.getElementById('statusText').textContent = `Saving ${name}...`;
+
+        const res = await fetch(`${API_BASE}/api/templates/${encodeURIComponent(name)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            html,
+            css,
+            meta: { displayName: name },
+          }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error);
+        }
+
+        const result = await res.json();
+        currentTemplateName = name;
+        document.getElementById('statusText').textContent = `Template: ${name} (saved)`;
+
+        // Add to dropdown if new template
+        const select = document.getElementById('templateSelect');
+        if (![...select.options].some(o => o.value === name)) {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          select.appendChild(opt);
+        }
+        select.value = name;
+
+        alert(`Template "${name}" saved to server successfully.\n\nFiles written: ${result.files.join(', ')}`);
+      } catch (err) {
+        document.getElementById('statusText').textContent = `Save failed!`;
+        alert('Save failed: ' + err.message);
+      }
     }
 
     // Insert a Handlebars variable at cursor in the selected text component

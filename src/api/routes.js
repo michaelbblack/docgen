@@ -269,6 +269,64 @@ router.post('/generate/multi', async (req, res) => {
 });
 
 /**
+ * PUT /api/templates/:name
+ * Save (create or overwrite) a template on the server.
+ *
+ * Request body:
+ * {
+ *   "html": "<div>{{title}}</div>",
+ *   "css": "body { font-family: sans-serif; }",
+ *   "meta": { "displayName": "My Template", "sampleFixture": "my-template.json" }
+ * }
+ */
+router.put('/templates/:name', async (req, res) => {
+  try {
+    const { name } = req.params;
+    const { html, css, meta } = req.body;
+
+    if (!html) {
+      return res.status(400).json({ error: 'Missing required field: html' });
+    }
+
+    // Sanitize template name - only allow safe characters
+    if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(name)) {
+      return res.status(400).json({
+        error: 'Invalid template name. Use only letters, numbers, hyphens, and underscores. Must start with a letter or number.',
+      });
+    }
+
+    const templateDir = resolve(__dirname, '../../templates', name);
+    await mkdir(templateDir, { recursive: true });
+
+    // Write template files
+    await writeFile(resolve(templateDir, 'template.hbs'), html, 'utf-8');
+
+    if (css !== undefined) {
+      await writeFile(resolve(templateDir, 'styles.css'), css, 'utf-8');
+    }
+
+    if (meta && typeof meta === 'object') {
+      // Merge with existing meta if present
+      let existingMeta = {};
+      try {
+        existingMeta = JSON.parse(await readFile(resolve(templateDir, 'meta.json'), 'utf-8'));
+      } catch { /* no existing meta */ }
+
+      const mergedMeta = { ...existingMeta, ...meta, name };
+      await writeFile(resolve(templateDir, 'meta.json'), JSON.stringify(mergedMeta, null, 2), 'utf-8');
+    }
+
+    res.json({
+      success: true,
+      template: name,
+      files: ['template.hbs', css !== undefined ? 'styles.css' : null, meta ? 'meta.json' : null].filter(Boolean),
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
  * POST /api/upload
  * Upload an image and get back a URL or base64 data URI.
  *

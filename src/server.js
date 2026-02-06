@@ -51,6 +51,7 @@ app.get('/', (req, res) => {
       'POST /api/generate/raw': 'Generate PDF from raw HTML/Handlebars + data',
       'POST /api/generate/multi': 'Generate multi-page PDF from multiple templates',
       'POST /api/preview': 'Preview rendered HTML before PDF conversion',
+      'PUT /api/templates/:name': 'Save or overwrite a template on the server',
       'GET /designer/': 'Visual template designer',
       'GET /health': 'Health check',
     },

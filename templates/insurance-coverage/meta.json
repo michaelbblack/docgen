@@ -1,0 +1,8 @@
+{
+  "name": "insurance-coverage",
+  "displayName": "Insurance Coverage Table",
+  "description": "Non-binding indication coverage table with multiple options, sections, and coverage line items",
+  "category": "insurance",
+  "pageSize": "A4",
+  "sampleFixture": "insurance-coverage.json"
+}

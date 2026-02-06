@@ -1,0 +1,155 @@
+@page {
+  size: A4;
+  margin: 0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Colorful top header */
+.top-header {
+  background: linear-gradient(135deg, #e8422f 0%, #f5a623 15%, #f5d623 30%, #4ecdc4 50%, #005a9c 70%, #3a1d8e 100%);
+  padding: 25px 35px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.top-header .logo-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.top-header .logo-circle img {
+  width: 40px;
+  height: 40px;
+}
+
+.top-header h1 {
+  font-size: 22pt;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.top-header h2 {
+  font-size: 14pt;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* Content area */
+.content {
+  padding: 20px 35px;
+}
+
+.intro-text {
+  font-size: 10pt;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.intro-text strong {
+  color: #003366;
+}
+
+/* Partner logos */
+.partner-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  margin: 20px 0;
+  padding: 10px 0;
+}
+
+.partner-logos img {
+  height: 35px;
+  max-width: 140px;
+  object-fit: contain;
+}
+
+.rates-note {
+  font-style: italic;
+  font-size: 9.5pt;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* Vendor directory table */
+.vendor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8.5pt;
+  margin-top: 10px;
+}
+
+.vendor-table th {
+  background: #003366;
+  color: white;
+  font-weight: 700;
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 8.5pt;
+  text-transform: uppercase;
+}
+
+.vendor-table th:first-child {
+  width: 25%;
+}
+
+/* Category headers */
+.vendor-table .category-row td {
+  background: #005a9c;
+  color: white;
+  font-weight: 700;
+  font-size: 8.5pt;
+  padding: 6px 10px;
+  text-transform: uppercase;
+}
+
+/* Data rows */
+.vendor-table td {
+  padding: 5px 10px;
+  border-bottom: 0.5px solid #e0e0e0;
+}
+
+.vendor-table .data-row:nth-child(even) td {
+  background: #f0f5fa;
+}
+
+.vendor-table .data-row:nth-child(odd) td {
+  background: #fff;
+}
+
+.vendor-table a {
+  color: #005a9c;
+  text-decoration: none;
+}
+
+.vendor-table a:hover {
+  text-decoration: underline;
+}
+
+/* Email column */
+.vendor-table .email-col {
+  font-size: 7.5pt;
+  word-break: break-all;
+}

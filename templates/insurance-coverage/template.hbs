@@ -1,0 +1,81 @@
+<div class="header">
+  {{#if logo}}
+  <img class="header-logo" src="{{logo}}" alt="Logo">
+  {{/if}}
+  <div class="header-text">
+    <h1>{{companyName}}</h1>
+    <h2>{{productLine}}</h2>
+  </div>
+</div>
+
+<hr style="border: 1.5px solid #003366; margin-bottom: 10px;">
+
+<div class="document-title">
+  <h3>{{title}}</h3>
+  <div class="date">Date: {{date}}</div>
+</div>
+
+<!-- Summary table: Aggregate limit, premium, fees -->
+<table class="coverage-table">
+  <thead>
+    <tr>
+      <th class="label-col"></th>
+      {{#each options}}
+      <th class="option-col {{#if highlight}}highlight{{/if}}">{{name}}</th>
+      {{/each}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each summaryRows}}
+    <tr class="summary-row">
+      <td class="label-cell">{{label}}</td>
+      {{#each values}}
+      <td class="value-cell">{{this}}</td>
+      {{/each}}
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<!-- Limits per insuring agreement -->
+<div class="section-title">{{limitsTitle}}</div>
+
+{{#if disclaimerNote}}
+<div class="notes">
+  <p>{{disclaimerNote}}</p>
+</div>
+{{/if}}
+
+{{#each coverageSections}}
+<table class="coverage-table" style="margin-top: 4px;">
+  {{#if sectionTitle}}
+  <tbody>
+    <tr class="section-header">
+      <td colspan="{{../columnCount}}">{{sectionTitle}}</td>
+    </tr>
+  </tbody>
+  {{/if}}
+  <tbody>
+    {{#each items}}
+    <tr class="{{#if subItem}}sub-item{{/if}} {{#if deepSubItem}}deep-sub-item{{/if}}">
+      <td class="label-cell" style="width: 40%;">
+        {{#if prefix}}{{prefix}} {{/if}}{{label}}
+      </td>
+      {{#each values}}
+      <td class="value-cell {{#if (eq this 'NIL')}}nil-value{{/if}} {{#if (eq this 'N/A')}}nil-value{{/if}}">
+        {{this}}
+      </td>
+      {{/each}}
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{/each}}
+
+{{#if footnotes}}
+<div class="notes">
+  {{#each footnotes}}
+  <p>{{this}}</p>
+  {{/each}}
+</div>
+{{/if}}

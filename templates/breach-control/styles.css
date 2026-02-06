@@ -1,0 +1,285 @@
+@page {
+  size: A4;
+  margin: 0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Colorful top header bar */
+.top-header {
+  background: linear-gradient(135deg, #e8422f 0%, #f5a623 15%, #f5d623 30%, #4ecdc4 50%, #005a9c 70%, #3a1d8e 100%);
+  padding: 25px 35px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.top-header .logo-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.top-header .logo-circle img {
+  width: 40px;
+  height: 40px;
+}
+
+.top-header h1 {
+  font-size: 22pt;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.top-header h2 {
+  font-size: 14pt;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* Body content */
+.content {
+  padding: 20px 35px;
+}
+
+.intro-text {
+  font-size: 10pt;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Quote block with photo */
+.quote-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin: 20px 0;
+  padding: 15px 20px;
+  background: #f7f9fc;
+  border-left: 4px solid #005a9c;
+}
+
+.quote-block .quote-text {
+  flex: 1;
+}
+
+.quote-block .quote-text p {
+  font-style: italic;
+  color: #005a9c;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.quote-block .quote-text .quote-open,
+.quote-block .quote-text .quote-close {
+  color: #4ecdc4;
+  font-size: 24pt;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.quote-block .quote-attribution {
+  text-align: right;
+  margin-top: 5px;
+}
+
+.quote-block .quote-attribution .name {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #005a9c;
+}
+
+.quote-block .quote-attribution .title {
+  font-size: 9pt;
+  color: #666;
+}
+
+.quote-block .quote-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Process steps section */
+.process-section {
+  margin: 25px 0;
+}
+
+.process-section h2 {
+  text-align: center;
+  font-size: 16pt;
+  color: #003366;
+  font-weight: 700;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.process-section h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to right, #005a9c, #4ecdc4);
+}
+
+.process-section h2::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to left, #005a9c, #4ecdc4);
+}
+
+/* Step circles */
+.steps-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 10px;
+}
+
+.step-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16pt;
+  font-weight: 700;
+}
+
+/* Step label bar */
+.step-labels {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.step-label {
+  flex: 1;
+  text-align: center;
+  padding: 6px 4px;
+  color: white;
+  font-weight: 700;
+  font-size: 9pt;
+}
+
+/* Specialist banner */
+.specialist-banner {
+  background: #003366;
+  color: white;
+  text-align: center;
+  padding: 6px;
+  font-size: 8.5pt;
+  margin-bottom: 8px;
+}
+
+/* Step descriptions grid */
+.steps-grid {
+  display: flex;
+  gap: 1px;
+  background: #e0e0e0;
+}
+
+.step-desc {
+  flex: 1;
+  background: white;
+  padding: 10px;
+  font-size: 8.5pt;
+  line-height: 1.4;
+  color: #444;
+}
+
+.step-desc .step-title {
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+/* Color assignments for steps */
+.step-color-1 { background: #c41230; }
+.step-color-2 { background: #e67e22; }
+.step-color-3 { background: #27ae60; }
+.step-color-4 { background: #005a9c; }
+.step-color-5 { background: #8e44ad; }
+
+.step-label-1 { background: #c41230; }
+.step-label-2 { background: #e67e22; }
+.step-label-3 { background: #27ae60; }
+.step-label-4 { background: #005a9c; }
+.step-label-5 { background: #8e44ad; }
+
+/* Horizontal rule */
+.color-bar {
+  height: 4px;
+  background: linear-gradient(to right, #c41230, #e67e22, #f5d623, #27ae60, #005a9c, #8e44ad);
+  margin: 20px 0;
+}
+
+/* Provider section */
+.provider-text {
+  font-size: 10pt;
+  color: #444;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  padding-top: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.footer .contact-info {
+  font-size: 9pt;
+  color: #333;
+}
+
+.footer .contact-info strong {
+  display: block;
+  font-size: 10pt;
+  margin-bottom: 3px;
+}
+
+.footer .company-logo img {
+  height: 40px;
+}
+
+.footer-bar {
+  text-align: center;
+  font-size: 7pt;
+  color: #888;
+  padding: 5px 0;
+  border-top: 1px solid #ddd;
+  margin-top: 10px;
+}

@@ -1,0 +1,59 @@
+{
+  "headerTitle": "Breach Control:",
+  "headerSubtitle": "Post-Breach Readiness",
+  "introText": "When it comes to providing exceptional service for your policyholders and rapid, expert breach response, Tokio Marine HCC's in-house Incident Response Team and experienced cyber claims team gives careful consideration to the needs of each insured. Our goal is to get your insured back up and running and reach a successful resolution. How do we do it?",
+  "primaryQuote": {
+    "text": "Our Cyber Incident Response Team expedites recovery and minimizes downtime for our policyholders. We're available 24/7 to navigate them through active cyber events.",
+    "name": "Richard Savage",
+    "jobTitle": "Sr. Director | Cyber Incident Response"
+  },
+  "processSection": {
+    "title": "Incident Response and Claims Process",
+    "bannerText": "Our policyholders will work with an in-house Incident Response Specialist 24/7/365",
+    "steps": [
+      {
+        "num": 1,
+        "label": "Report",
+        "color": "#c41230",
+        "title": "Incidents or claims are reported to:",
+        "description": "888.627.8995\nCyberClaims@tmhcc.com"
+      },
+      {
+        "num": 2,
+        "label": "Respond",
+        "color": "#e67e22",
+        "description": "Our policyholders work with an in-house Incident Response Specialist 24/7/365 or a claims team member who makes recommendations and guides through every step of the claims process."
+      },
+      {
+        "num": 3,
+        "label": "Recover",
+        "color": "#27ae60",
+        "description": "Policyholders are advised about the best recovery path and recommended recovery experts to assist with technical expertise and support."
+      },
+      {
+        "num": 4,
+        "label": "Defend",
+        "color": "#005a9c",
+        "description": "In the event of a breach, we engage outside experienced counsel to advise on notification and defense during litigation."
+      },
+      {
+        "num": 5,
+        "label": "Strengthen",
+        "color": "#8e44ad",
+        "description": "We recommend certain controls, including risk mitigation services, to improve the insured's posture post event."
+      }
+    ]
+  },
+  "providerText": "We work and collaborate with a trusted team of providers. We know every cyber claim is unique, so our incident response and claims team provide a range of options to best fit your policyholders' business and security needs.",
+  "secondaryQuote": {
+    "text": "We deliver superior claims service and assistance. Our Cyber Claims professionals are highly knowledgeable and pride themselves in responsiveness, efficiency, effectiveness, and going above and beyond for our insureds during challenging circumstances.",
+    "name": "Tamara Ashjian",
+    "jobTitle": "VP, Claims | Cyber & Tech"
+  },
+  "footerContactTitle": "Our cyber claims team can be reached at:",
+  "footerContacts": [
+    "888.627.8995",
+    "CyberClaims@tmhcc.com"
+  ],
+  "footerDisclaimer": "Tokio Marine HCC | NAS Insurance Services, LLC, CA License #0677191"
+}

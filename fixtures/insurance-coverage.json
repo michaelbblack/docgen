@@ -1,0 +1,68 @@
+{
+  "companyName": "NetGuard\u00ae Plus",
+  "productLine": "Cyber Liability Insurance",
+  "title": "NETGUARD\u00aePLUS CYBER LIABILITY INSURANCE NON-BINDING INDICATION",
+  "date": "September 07, 2025",
+  "options": [
+    { "name": "Option 1" },
+    { "name": "Option 2" },
+    { "name": "Option 3" },
+    { "name": "Option 4", "highlight": true }
+  ],
+  "summaryRows": [
+    { "label": "Maximum Policy Aggregate Limit", "values": ["$500K", "$1M", "$2M", "$3M"] },
+    { "label": "Option Premium", "values": ["$5,851", "$6,502", "$10,727", "$11,703"] },
+    { "label": "Policy Fee (fully earned at inception)", "values": ["$0", "$0", "$0", "$0"] },
+    { "label": "Total Payable Premium", "values": ["$5,851", "$6,502", "$10,727", "$11,703"] }
+  ],
+  "limitsTitle": "LIMITS PER INSURING AGREEMENT",
+  "disclaimerNote": "\"NIL\" or \"N/A\" indicates that the Coverage is not included in the quoted premium and that portion of the Policy will not apply.",
+  "columnCount": 5,
+  "coverageSections": [
+    {
+      "sectionTitle": "Third Party Liability Insuring Agreements (Claims Made and Reported Coverage)",
+      "items": [
+        { "label": "Multimedia Liability Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "Security and Privacy Liability Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "Privacy Regulatory Defense and Penalties Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "PCI DSS Liability Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "Bodily Injury Liability Coverage", "values": ["$100K/$100K", "$250K/$250K", "$250K/$250K", "$250K/$250K"] },
+        { "label": "Property Damage Liability Coverage", "values": ["$50K/$50K", "$50K/$50K", "$50K/$50K", "$50K/$50K"] },
+        { "label": "TCPA Defense Coverage", "values": ["$50K/$50K", "$50K/$50K", "$50K/$50K", "$50K/$50K"] }
+      ]
+    },
+    {
+      "sectionTitle": "First Party Insuring Agreements (Event Discovered and Reported Coverage)",
+      "items": [
+        { "label": "Breach Event Costs Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "Post Breach Remediation Costs Coverage", "values": ["$25K/$25K", "$25K/$25K", "$25K/$25K", "$25K/$25K"] },
+        { "label": "BrandGuard\u2122 Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "System Failure Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "Dependent System Failure Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "Cyber Extortion Coverage", "values": ["$250K/$250K", "$250K/$250K", "$250K/$250K", "$250K/$250K"] }
+      ]
+    },
+    {
+      "items": [
+        { "label": "Cyber Crime Coverage", "values": ["", "", "", ""] },
+        { "label": "Financial Fraud Sublimit", "prefix": "A.", "subItem": true, "values": ["NIL", "NIL", "NIL", "NIL"] },
+        { "label": "Telecommunications and Utilities Fraud Sublimit", "prefix": "B.", "subItem": true, "values": ["NIL", "NIL", "NIL", "NIL"] },
+        { "label": "Phishing Fraud Sublimits", "prefix": "C.", "subItem": true, "values": ["", "", "", ""] },
+        { "label": "Your Phishing Fraud Loss Sublimit", "prefix": "1.", "deepSubItem": true, "values": ["NIL", "NIL", "NIL", "NIL"] },
+        { "label": "Client Phishing Fraud Loss Sublimit", "prefix": "2.", "deepSubItem": true, "values": ["NIL", "NIL", "NIL", "NIL"] },
+        { "label": "Phishing Fraud Aggregate Sublimit (C.1. & C.2 combined)", "prefix": "3.", "deepSubItem": true, "values": ["NIL", "NIL", "NIL", "NIL"] },
+        { "label": "Cyber Crime Aggregate Limit (A., B., & C. combined)", "values": ["NIL", "NIL", "NIL", "NIL"] }
+      ]
+    },
+    {
+      "items": [
+        { "label": "Bricking Loss Coverage", "values": ["$500K/$500K", "$1M/$1M", "$2M/$2M", "$3M/$3M"] },
+        { "label": "Property Damage Loss Coverage", "values": ["$50K/$50K", "$50K/$50K", "$50K/$50K", "$50K/$50K"] },
+        { "label": "Reward Expenses Coverage", "values": ["$50K/$50K", "$50K/$50K", "$50K/$50K", "$50K/$50K"] },
+        { "label": "Court Attendance Costs Coverage", "values": ["$25K/$25K", "$25K/$25K", "$25K/$25K", "$25K/$25K"] },
+        { "label": "Additional Defense Costs Limit:\n(Not applicable to Bodily Injury Liability, Property Damage Liability or TCPA Defense Coverage)", "values": ["NIL", "NIL", "NIL", "NIL"] },
+        { "label": "Breach Event Costs Outside the Limit Enhancement:", "values": ["N/A", "N/A", "N/A", "N/A"] }
+      ]
+    }
+  ]
+}

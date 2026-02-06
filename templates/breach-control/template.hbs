@@ -1,0 +1,112 @@
+<div class="top-header">
+  {{#if headerIcon}}
+  <div class="logo-circle">
+    <img src="{{headerIcon}}" alt="Icon">
+  </div>
+  {{else}}
+  <div class="logo-circle" style="font-size: 24pt;">&#128737;</div>
+  {{/if}}
+  <div>
+    <h1>{{headerTitle}}</h1>
+    <h2>{{headerSubtitle}}</h2>
+  </div>
+</div>
+
+<div class="content">
+  {{#if introText}}
+  <div class="intro-text">
+    {{{introText}}}
+  </div>
+  {{/if}}
+
+  {{#if primaryQuote}}
+  <div class="quote-block">
+    <div class="quote-text">
+      <span class="quote-open">&ldquo;</span>
+      <p>{{primaryQuote.text}}</p>
+      <span class="quote-close">&rdquo;</span>
+      <div class="quote-attribution">
+        <div class="name">{{primaryQuote.name}}</div>
+        <div class="title">{{primaryQuote.jobTitle}}</div>
+      </div>
+    </div>
+    {{#if primaryQuote.photo}}
+    <img class="quote-photo" src="{{primaryQuote.photo}}" alt="{{primaryQuote.name}}">
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{#if processSection}}
+  <div class="process-section">
+    <h2>{{processSection.title}}</h2>
+
+    <div class="steps-row">
+      {{#each processSection.steps}}
+      <div class="step-circle step-color-{{num}}" style="background: {{color}};">{{num}}</div>
+      {{/each}}
+    </div>
+
+    <div class="step-labels">
+      {{#each processSection.steps}}
+      <div class="step-label" style="background: {{color}};">{{label}}</div>
+      {{/each}}
+    </div>
+
+    {{#if processSection.bannerText}}
+    <div class="specialist-banner">{{processSection.bannerText}}</div>
+    {{/if}}
+
+    <div class="steps-grid">
+      {{#each processSection.steps}}
+      <div class="step-desc">
+        {{#if title}}<div class="step-title">{{title}}</div>{{/if}}
+        <p>{{description}}</p>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="color-bar"></div>
+
+  {{#if providerText}}
+  <div class="provider-text">
+    {{{providerText}}}
+  </div>
+  {{/if}}
+
+  {{#if secondaryQuote}}
+  <div class="quote-block">
+    {{#if secondaryQuote.photo}}
+    <img class="quote-photo" src="{{secondaryQuote.photo}}" alt="{{secondaryQuote.name}}">
+    {{/if}}
+    <div class="quote-text">
+      <span class="quote-open">&ldquo;</span>
+      <p>{{secondaryQuote.text}}</p>
+      <span class="quote-close">&rdquo;</span>
+      <div class="quote-attribution">
+        <div class="name">{{secondaryQuote.name}}</div>
+        <div class="title">{{secondaryQuote.jobTitle}}</div>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="footer">
+    <div class="contact-info">
+      <strong>{{footerContactTitle}}</strong>
+      {{#each footerContacts}}
+      <div>{{this}}</div>
+      {{/each}}
+    </div>
+    {{#if footerLogo}}
+    <div class="company-logo">
+      <img src="{{footerLogo}}" alt="Company Logo">
+    </div>
+    {{/if}}
+  </div>
+
+  {{#if footerDisclaimer}}
+  <div class="footer-bar">{{footerDisclaimer}}</div>
+  {{/if}}
+</div>

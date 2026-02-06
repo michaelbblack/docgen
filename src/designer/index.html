@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocGen - Visual Template Designer</title>
+  <link rel="stylesheet" href="https://unpkg.com/grapesjs@0.21.13/dist/css/grapes.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top toolbar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      background: #16213e;
+      border-bottom: 1px solid #333;
+      flex-shrink: 0;
+    }
+
+    .toolbar .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #4fc3f7;
+      margin-right: 20px;
+    }
+
+    .toolbar select, .toolbar input, .toolbar button {
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #1a1a2e;
+      color: #e0e0e0;
+    }
+
+    .toolbar button {
+      cursor: pointer;
+      background: #005a9c;
+      border-color: #005a9c;
+      color: white;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .toolbar button:hover { background: #0074d9; }
+    .toolbar button.btn-success { background: #27ae60; border-color: #27ae60; }
+    .toolbar button.btn-success:hover { background: #2ecc71; }
+    .toolbar button.btn-warning { background: #e67e22; border-color: #e67e22; }
+    .toolbar button.btn-warning:hover { background: #f39c12; }
+
+    .toolbar .spacer { flex: 1; }
+
+    /* Main editor area */
+    .editor-wrap {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    #gjs {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Side panel for data binding */
+    .data-panel {
+      width: 320px;
+      background: #16213e;
+      border-left: 1px solid #333;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .data-panel .panel-header {
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 13px;
+      background: #1a1a2e;
+      border-bottom: 1px solid #333;
+    }
+
+    .data-panel .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .data-panel textarea {
+      width: 100%;
+      min-height: 200px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      padding: 10px;
+      background: #0d1117;
+      color: #c9d1d9;
+      border: 1px solid #333;
+      border-radius: 4px;
+      resize: vertical;
+    }
+
+    .data-panel label {
+      display: block;
+      font-size: 11px;
+      color: #888;
+      margin: 10px 0 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .data-panel .helper-text {
+      font-size: 11px;
+      color: #666;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .insert-var-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .insert-var-row input {
+      flex: 1;
+      font-size: 12px;
+      padding: 5px 8px;
+      background: #0d1117;
+      color: #c9d1d9;
+      border: 1px solid #333;
+      border-radius: 4px;
+    }
+
+    .insert-var-row button {
+      font-size: 11px;
+      padding: 5px 10px;
+      background: #005a9c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Variables quick-insert chips */
+    .var-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .var-chip {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: #2a3a5e;
+      color: #4fc3f7;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .var-chip:hover { background: #3a4a7e; }
+
+    /* GrapesJS overrides */
+    .gjs-one-bg { background: #16213e; }
+    .gjs-two-color { color: #e0e0e0; }
+    .gjs-three-bg { background: #1a1a2e; }
+    .gjs-four-color, .gjs-four-color-h:hover { color: #4fc3f7; }
+
+    /* Status bar */
+    .status-bar {
+      padding: 4px 16px;
+      font-size: 11px;
+      color: #666;
+      background: #0d1117;
+      border-top: 1px solid #333;
+      display: flex;
+      gap: 20px;
+    }
+
+    .status-bar .status-item { display: flex; gap: 4px; align-items: center; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status-dot.green { background: #27ae60; }
+    .status-dot.yellow { background: #f1c40f; }
+
+    /* Modal overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: #16213e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 24px;
+      width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-content h3 { margin-bottom: 16px; color: #4fc3f7; }
+    .modal-content pre {
+      background: #0d1117;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      overflow-x: auto;
+      color: #c9d1d9;
+    }
+    .modal-content .modal-actions {
+      display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end;
+    }
+    .modal-content button {
+      padding: 6px 14px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      cursor: pointer;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <span class="logo">DocGen Designer</span>
+
+    <select id="templateSelect">
+      <option value="">-- New Template --</option>
+    </select>
+    <button onclick="loadTemplate()">Load</button>
+
+    <span class="spacer"></span>
+
+    <button onclick="previewPdf()" class="btn-warning">Preview PDF</button>
+    <button onclick="exportTemplate()" class="btn-success">Export Template</button>
+    <button onclick="saveTemplate()">Save</button>
+  </div>
+
+  <!-- Main editor area -->
+  <div class="editor-wrap">
+    <div id="gjs"></div>
+
+    <!-- Data binding panel -->
+    <div class="data-panel">
+      <div class="panel-header">Data & Variables</div>
+      <div class="panel-body">
+        <label>Template Data (JSON)</label>
+        <textarea id="dataJson" placeholder='{"title": "My Document", "items": [...]}'>{}</textarea>
+
+        <label>Insert Handlebars Variable</label>
+        <div class="insert-var-row">
+          <input id="varName" placeholder="variableName" />
+          <button onclick="insertVariable()">Insert</button>
+        </div>
+
+        <label style="margin-top: 12px;">Quick Insert</label>
+        <div class="var-chips">
+          <span class="var-chip" onclick="insertSnippet('{{variableName}}')">{{var}}</span>
+          <span class="var-chip" onclick="insertSnippet('{{#if condition}}...{{/if}}')">#if</span>
+          <span class="var-chip" onclick="insertSnippet('{{#each items}}...{{/each}}')">#each</span>
+          <span class="var-chip" onclick="insertSnippet('{{#unless condition}}...{{/unless}}')">#unless</span>
+          <span class="var-chip" onclick="insertSnippet('{{{rawHtml}}}')">raw HTML</span>
+          <span class="var-chip" onclick="insertSnippet('{{> partialName}}')">partial</span>
+          <span class="var-chip" onclick="insertSnippet('{{formatDate date}}')">date</span>
+          <span class="var-chip" onclick="insertSnippet('{{uppercase text}}')">uppercase</span>
+        </div>
+
+        <div class="helper-text">
+          <p>Use Handlebars syntax in text content:</p>
+          <p><code>{{name}}</code> - variable</p>
+          <p><code>{{#if show}}...{{/if}}</code> - conditional</p>
+          <p><code>{{#each items}}...{{/each}}</code> - loop</p>
+          <p><code>{{{rawHtml}}}</code> - unescaped HTML</p>
+        </div>
+
+        <label style="margin-top: 16px;">Page Settings</label>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <select id="pageFormat" style="flex:1; font-size: 12px; padding: 4px 8px; background: #0d1117; color: #c9d1d9; border: 1px solid #333; border-radius: 4px;">
+            <option value="A4">A4</option>
+            <option value="Letter">Letter</option>
+            <option value="Legal">Legal</option>
+            <option value="A3">A3</option>
+          </select>
+          <label style="display: flex; align-items: center; gap: 4px; margin: 0; text-transform: none; font-size: 12px; color: #c9d1d9;">
+            <input type="checkbox" id="pageLandscape"> Landscape
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-item"><div class="status-dot green"></div>Ready</div>
+    <div class="status-item" id="statusText">No template loaded</div>
+  </div>
+
+  <!-- Export modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal-content">
+      <h3>Export Template</h3>
+      <label>HTML Template (template.hbs)</label>
+      <pre id="exportHtml"></pre>
+      <label style="margin-top: 12px;">CSS Styles (styles.css)</label>
+      <pre id="exportCss"></pre>
+      <div class="modal-actions">
+        <button onclick="copyExport('html')">Copy HTML</button>
+        <button onclick="copyExport('css')">Copy CSS</button>
+        <button onclick="downloadExport()">Download Files</button>
+        <button onclick="closeModal('exportModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/grapesjs@0.21.13/dist/grapes.min.js"></script>
+  <script src="https://unpkg.com/grapesjs-preset-webpage@1.0.3/dist/index.js"></script>
+  <script>
+    const API_BASE = window.location.origin;
+    let editor;
+
+    // Initialize GrapesJS
+    function initEditor() {
+      editor = grapesjs.init({
+        container: '#gjs',
+        height: '100%',
+        width: 'auto',
+        storageManager: false,
+        plugins: ['gjs-preset-webpage'],
+        pluginsOpts: {
+          'gjs-preset-webpage': {
+            blocksBasicOpts: { flexGrid: true },
+            navbarOpts: false,
+            countdownOpts: false,
+          },
+        },
+        canvas: {
+          styles: [
+            'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+          ],
+        },
+        // Custom blocks for document generation
+        blockManager: {
+          appendTo: '.gjs-blocks-cs',
+        },
+      });
+
+      // Add custom blocks for PDF templates
+      addCustomBlocks();
+
+      // Set some starter content
+      editor.setComponents(`
+        <div style="padding: 30px; font-family: 'Segoe UI', Arial, sans-serif;">
+          <h1 style="color: #003366; font-size: 24px;">Document Title</h1>
+          <p style="color: #666; margin-top: 10px;">Start designing your template by dragging components from the panel.</p>
+          <p style="color: #888; margin-top: 5px; font-size: 12px;">Use {{variableName}} syntax for dynamic content.</p>
+        </div>
+      `);
+
+      // Load template list
+      loadTemplateList();
+    }
+
+    function addCustomBlocks() {
+      const bm = editor.BlockManager;
+
+      // Handlebars blocks
+      bm.add('hbs-variable', {
+        label: '{{Variable}}',
+        category: 'Handlebars',
+        content: '<span data-gjs-type="text">{{variableName}}</span>',
+      });
+
+      bm.add('hbs-if', {
+        label: '{{#if}} Block',
+        category: 'Handlebars',
+        content: `<div data-gjs-type="text">{{#if condition}}<div>Conditional content here</div>{{/if}}</div>`,
+      });
+
+      bm.add('hbs-each', {
+        label: '{{#each}} Loop',
+        category: 'Handlebars',
+        content: `<div data-gjs-type="text">{{#each items}}<div>{{this}}</div>{{/each}}</div>`,
+      });
+
+      bm.add('hbs-raw', {
+        label: '{{{raw HTML}}}',
+        category: 'Handlebars',
+        content: '<div data-gjs-type="text">{{{rawHtmlVariable}}}</div>',
+      });
+
+      // Document layout blocks
+      bm.add('page-header-gradient', {
+        label: 'Gradient Header',
+        category: 'Document',
+        content: `<div style="background: linear-gradient(135deg, #e8422f 0%, #f5a623 15%, #f5d623 30%, #4ecdc4 50%, #005a9c 70%, #3a1d8e 100%); padding: 25px 35px; color: white;">
+          <h1 style="font-size: 28px; font-weight: 700;">{{headerTitle}}</h1>
+          <h2 style="font-size: 16px; font-weight: 400; opacity: 0.9;">{{headerSubtitle}}</h2>
+        </div>`,
+      });
+
+      bm.add('page-header-solid', {
+        label: 'Solid Header',
+        category: 'Document',
+        content: `<div style="background: #003366; padding: 20px 35px; color: white; display: flex; align-items: center; gap: 15px;">
+          <h1 style="font-size: 18px; font-weight: 700;">{{companyName}}</h1>
+        </div>`,
+      });
+
+      bm.add('data-table', {
+        label: 'Data Table',
+        category: 'Document',
+        content: `<table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+          <thead>
+            <tr>
+              <th style="background: #003366; color: white; padding: 8px 10px; text-align: left;">Column 1</th>
+              <th style="background: #003366; color: white; padding: 8px 10px; text-align: left;">Column 2</th>
+              <th style="background: #003366; color: white; padding: 8px 10px; text-align: left;">Column 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 6px 10px; border-bottom: 1px solid #eee;">Data 1</td>
+              <td style="padding: 6px 10px; border-bottom: 1px solid #eee;">Data 2</td>
+              <td style="padding: 6px 10px; border-bottom: 1px solid #eee;">Data 3</td>
+            </tr>
+          </tbody>
+        </table>`,
+      });
+
+      bm.add('quote-block', {
+        label: 'Quote Block',
+        category: 'Document',
+        content: `<div style="display: flex; gap: 20px; padding: 15px 20px; background: #f7f9fc; border-left: 4px solid #005a9c; margin: 15px 0;">
+          <div style="flex: 1;">
+            <p style="font-style: italic; color: #005a9c; font-size: 12px; line-height: 1.5;">{{quoteText}}</p>
+            <div style="text-align: right; margin-top: 8px;">
+              <div style="font-weight: 700; color: #005a9c;">{{quoteName}}</div>
+              <div style="font-size: 10px; color: #666;">{{quoteTitle}}</div>
+            </div>
+          </div>
+        </div>`,
+      });
+
+      bm.add('process-steps', {
+        label: 'Process Steps',
+        category: 'Document',
+        content: `<div style="margin: 20px 0;">
+          <h2 style="text-align: center; color: #003366; font-size: 18px; margin-bottom: 15px;">Process Steps</h2>
+          <div style="display: flex; justify-content: center; gap: 30px;">
+            <div style="width: 45px; height: 45px; border-radius: 50%; background: #c41230; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">1</div>
+            <div style="width: 45px; height: 45px; border-radius: 50%; background: #e67e22; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">2</div>
+            <div style="width: 45px; height: 45px; border-radius: 50%; background: #27ae60; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">3</div>
+            <div style="width: 45px; height: 45px; border-radius: 50%; background: #005a9c; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">4</div>
+            <div style="width: 45px; height: 45px; border-radius: 50%; background: #8e44ad; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">5</div>
+          </div>
+        </div>`,
+      });
+
+      bm.add('color-divider', {
+        label: 'Color Divider',
+        category: 'Document',
+        content: `<div style="height: 4px; background: linear-gradient(to right, #c41230, #e67e22, #f5d623, #27ae60, #005a9c, #8e44ad); margin: 20px 0;"></div>`,
+      });
+
+      bm.add('page-break', {
+        label: 'Page Break',
+        category: 'Document',
+        content: `<div style="page-break-after: always; border: 2px dashed #ccc; padding: 10px; text-align: center; color: #999; margin: 10px 0;">--- Page Break ---</div>`,
+      });
+
+      bm.add('footer', {
+        label: 'Footer',
+        category: 'Document',
+        content: `<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 35px; border-top: 1px solid #ccc; margin-top: 20px;">
+          <div style="font-size: 10px; color: #333;">
+            <strong>Contact us:</strong><br>
+            {{contactPhone}}<br>
+            {{contactEmail}}
+          </div>
+          <div style="font-size: 8px; color: #888;">{{footerDisclaimer}}</div>
+        </div>`,
+      });
+    }
+
+    // Load available templates into dropdown
+    async function loadTemplateList() {
+      try {
+        const res = await fetch(`${API_BASE}/api/templates`);
+        const { templates } = await res.json();
+        const select = document.getElementById('templateSelect');
+        templates.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.name;
+          opt.textContent = t.displayName || t.name;
+          select.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Failed to load templates:', err);
+      }
+    }
+
+    // Load a template into the editor
+    async function loadTemplate() {
+      const name = document.getElementById('templateSelect').value;
+      if (!name) return;
+
+      try {
+        // Load template HTML and CSS
+        const [htmlRes, cssRes, fixtureRes] = await Promise.all([
+          fetch(`${API_BASE}/templates/${name}/template.hbs`).then(r => r.text()),
+          fetch(`${API_BASE}/templates/${name}/styles.css`).then(r => r.text()).catch(() => ''),
+          fetch(`${API_BASE}/templates/${name}/meta.json`)
+            .then(r => r.json())
+            .then(meta => meta.sampleFixture
+              ? fetch(`${API_BASE}/templates/../fixtures/${meta.sampleFixture}`).then(r => r.text()).catch(() => '{}')
+              : '{}'
+            )
+            .catch(() => '{}'),
+        ]);
+
+        editor.setComponents(htmlRes);
+        editor.setStyle(cssRes);
+        document.getElementById('dataJson').value = fixtureRes;
+        document.getElementById('statusText').textContent = `Template: ${name}`;
+      } catch (err) {
+        alert('Failed to load template: ' + err.message);
+      }
+    }
+
+    // Preview as PDF
+    async function previewPdf() {
+      try {
+        const html = editor.getHtml();
+        const css = editor.getCss();
+        let data = {};
+        try {
+          data = JSON.parse(document.getElementById('dataJson').value);
+        } catch { /* use empty data */ }
+
+        const format = document.getElementById('pageFormat').value;
+        const landscape = document.getElementById('pageLandscape').checked;
+
+        const res = await fetch(`${API_BASE}/api/generate/raw`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ html, css, data, options: { format, landscape } }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error);
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      } catch (err) {
+        alert('PDF generation failed: ' + err.message);
+      }
+    }
+
+    // Export template files
+    function exportTemplate() {
+      const html = editor.getHtml();
+      const css = editor.getCss();
+      document.getElementById('exportHtml').textContent = html;
+      document.getElementById('exportCss').textContent = css;
+      document.getElementById('exportModal').classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function copyExport(type) {
+      const el = type === 'html'
+        ? document.getElementById('exportHtml')
+        : document.getElementById('exportCss');
+      navigator.clipboard.writeText(el.textContent).then(() => {
+        alert(`${type.toUpperCase()} copied to clipboard!`);
+      });
+    }
+
+    function downloadExport() {
+      const html = editor.getHtml();
+      const css = editor.getCss();
+
+      downloadFile('template.hbs', html);
+      downloadFile('styles.css', css);
+    }
+
+    function downloadFile(filename, content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Save template to server
+    async function saveTemplate() {
+      const name = prompt('Template name (e.g., my-template):');
+      if (!name) return;
+
+      const html = editor.getHtml();
+      const css = editor.getCss();
+
+      // For now, show the export - server-side save would need a write endpoint
+      alert(`Template "${name}" exported.\n\nSave these files to templates/${name}/:\n- template.hbs\n- styles.css`);
+      exportTemplate();
+    }
+
+    // Insert a Handlebars variable at cursor in the selected text component
+    function insertVariable() {
+      const varName = document.getElementById('varName').value.trim();
+      if (!varName) return;
+      insertSnippet(`{{${varName}}}`);
+      document.getElementById('varName').value = '';
+    }
+
+    function insertSnippet(snippet) {
+      const selected = editor.getSelected();
+      if (selected) {
+        const content = selected.get('content') || '';
+        selected.set('content', content + snippet);
+      } else {
+        // Add as new text component
+        editor.addComponents(`<span>${snippet}</span>`);
+      }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', initEditor);
+  </script>
+</body>
+</html>

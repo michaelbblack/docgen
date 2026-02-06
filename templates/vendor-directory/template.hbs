@@ -1,0 +1,61 @@
+<div class="top-header">
+  {{#if headerIcon}}
+  <div class="logo-circle">
+    <img src="{{headerIcon}}" alt="Icon">
+  </div>
+  {{else}}
+  <div class="logo-circle" style="font-size: 24pt;">&#128736;</div>
+  {{/if}}
+  <div>
+    <h1>{{headerTitle}}</h1>
+    <h2>{{headerSubtitle}}</h2>
+  </div>
+</div>
+
+<div class="content">
+  {{#if introText}}
+  <div class="intro-text">
+    {{{introText}}}
+  </div>
+  {{/if}}
+
+  {{#if partnerLogos}}
+  <div class="partner-logos">
+    {{#each partnerLogos}}
+    <img src="{{src}}" alt="{{alt}}">
+    {{/each}}
+  </div>
+  {{/if}}
+
+  {{#if ratesNote}}
+  <div class="rates-note">{{ratesNote}}</div>
+  {{/if}}
+
+  <table class="vendor-table">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Vendor</th>
+        <th>Website</th>
+        <th>Phone</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each categories}}
+      <tr class="category-row">
+        <td colspan="5">{{categoryName}}</td>
+      </tr>
+      {{#each vendors}}
+      <tr class="data-row">
+        <td>{{#if serviceName}}{{serviceName}}{{/if}}</td>
+        <td>{{vendorName}}</td>
+        <td>{{#if website}}<a href="https://{{website}}">{{website}}</a>{{/if}}</td>
+        <td>{{phone}}</td>
+        <td class="email-col">{{email}}</td>
+      </tr>
+      {{/each}}
+      {{/each}}
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,8 @@
+{
+  "name": "vendor-directory",
+  "displayName": "Vendor Directory - Service Providers",
+  "description": "Categorized vendor directory table with partner logos and colored section headers",
+  "category": "directory",
+  "pageSize": "A4",
+  "sampleFixture": "vendor-directory.json"
+}

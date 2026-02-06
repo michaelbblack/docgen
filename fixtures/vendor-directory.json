@@ -1,0 +1,65 @@
+{
+  "headerTitle": "System Control:",
+  "headerSubtitle": "Pre-Breach Readiness",
+  "introText": "<p>Tokio Marine HCC insurance policyholders can access a curated list of service providers that offer a variety of risk mitigation services to help businesses reduce their risk of a cyber breach and benefit with reduced premium rates if certain controls are implemented before your policy binds. Services range from antivirus software to penetration testing to PCI compliance review.</p><p style='margin-top:10px'>This is a comprehensive list of service providers in good standing with <strong>Tokio Marine HCC - Cyber and Professional Lines Group</strong>. Services are to be secured directly with each entity and are not covered as part of your insurance policy.</p>",
+  "ratesNote": "Some rates have been negotiated and are determined per project and vary according to the size and scope of services.",
+  "categories": [
+    {
+      "categoryName": "TWO-FACTOR AUTHENTICATION (2FA)",
+      "vendors": [
+        {
+          "vendorName": "Duo Security",
+          "website": "youroneit.com",
+          "phone": "703.570.4103",
+          "email": "mike.zaroudny@youroneit.com"
+        }
+      ]
+    },
+    {
+      "categoryName": "CLOUD BACKUP PROVIDER",
+      "vendors": [
+        {
+          "vendorName": "Datto powered by OneIT",
+          "website": "youroneit.com",
+          "phone": "703.570.4103",
+          "email": "mike.zaroudny@youroneit.com"
+        }
+      ]
+    },
+    {
+      "categoryName": "TABLETOP READINESS ASSESSMENT",
+      "vendors": [
+        { "vendorName": "ePlace Solutions", "website": "eplacesolutions.com", "phone": "800.387.4468", "email": "efalke@eplaceinc.com" },
+        { "vendorName": "Kroll", "website": "Kroll.com", "phone": "615.483.3402", "email": "CIS@kroll.com" },
+        { "vendorName": "Arete Advisors", "website": "Areteir.com", "phone": "561.231.2758", "email": "jpasker@areteir.com" },
+        { "vendorName": "Wilson Elser", "website": "Wilsonelser.com", "phone": "504.372.6698", "email": "dominick.cvitanovic@wilsonelser.com" },
+        { "vendorName": "Entara", "website": "Entaracorp.com", "phone": "312.351.1405", "email": "Deniz.Sagnaklar@entaracorp.com" },
+        { "vendorName": "Lewis Brisbois", "website": "lewisbrisbois.com", "phone": "602.499.8126", "email": "Robert.F.Walker@lewisbrisbois.com" }
+      ]
+    },
+    {
+      "categoryName": "NETWORK SECURITY/PENETRATION TESTING",
+      "vendors": [
+        { "vendorName": "Kroll", "website": "Kroll.com", "phone": "615.483.3402", "email": "CIS@kroll.com" },
+        { "vendorName": "Ankura", "website": "Ankura.com", "phone": "215.832.4485", "email": "incident@ankura.com" },
+        { "vendorName": "Arete Advisors", "website": "Areteir.com", "phone": "561.231.2758", "email": "jpasker@areteir.com" }
+      ]
+    },
+    {
+      "categoryName": "SECURITY AWARENESS/PHISHING SIMULATION",
+      "vendors": [
+        { "vendorName": "Wizer", "website": "wizer-training.com", "phone": "586.601.4698", "email": "support@wizer-training.com" },
+        { "vendorName": "ePlace Solutions", "website": "eplacesolutions.com", "phone": "800.387.4468", "email": "efalke@eplaceinc.com" },
+        { "vendorName": "Kroll", "website": "Kroll.com", "phone": "615.483.3402", "email": "CIS@kroll.com" },
+        { "vendorName": "Proofpoint", "website": "Proofpoint.com", "phone": "408.517.4710", "email": "sales@proofpoint.com" }
+      ]
+    },
+    {
+      "categoryName": "PCI COMPLIANCE REVIEW",
+      "vendors": [
+        { "vendorName": "ePlace Solutions", "website": "eplacesolutions.com", "phone": "800.387.4468", "email": "efalke@eplaceinc.com" },
+        { "vendorName": "Kroll", "website": "Kroll.com", "phone": "615.483.3402", "email": "CIS@kroll.com" }
+      ]
+    }
+  ]
+}

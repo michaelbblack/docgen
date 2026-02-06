@@ -1,0 +1,8 @@
+{
+  "name": "breach-control",
+  "displayName": "Breach Control - Post-Breach Readiness",
+  "description": "Marketing-style page with colorful header, quote blocks with photos, numbered process flow, and footer",
+  "category": "marketing",
+  "pageSize": "A4",
+  "sampleFixture": "breach-control.json"
+}

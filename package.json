@@ -1,0 +1,37 @@
+{
+  "name": "docgen",
+  "version": "1.0.0",
+  "description": "Dynamic high-design PDF document generation engine with REST API, CLI, and visual template designer",
+  "main": "src/server.js",
+  "bin": {
+    "docgen": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "cli": "node src/cli.js",
+    "designer": "node src/server.js --designer",
+    "test": "node --test src/tests/*.test.js"
+  },
+  "keywords": [
+    "pdf",
+    "document-generation",
+    "templates",
+    "handlebars",
+    "playwright"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "express": "^5.2.1",
+    "glob": "^13.0.1",
+    "handlebars": "^4.7.8",
+    "multer": "^2.0.2",
+    "playwright-core": "^1.58.1"
+  }
+}
